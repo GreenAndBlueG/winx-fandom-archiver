@@ -46,7 +46,9 @@ jobs:
           pip install wayback-machine-archiver
 
       - name: Archive robots.txt and sitemap
-        run: archiver https://winx.fandom.com/robots.txt ${{ matrix.sitemaps }}
+        run: |
+          archiver https://winx.fandom.com/robots.txt --log INFO
+          archiver ${{ matrix.sitemaps }} --log INFO
 
       - name: Setup Node
         uses: actions/setup-node@v2
@@ -56,6 +58,8 @@ jobs:
       
       - name: Install Wayback Sitemap Archive
         run: npm install -g wayback-sitemap-archive
+        if: ${{ success() }}
 
       - name: Archive wiki contents
         run: wayback-sitemap-archive ${{ matrix.sitemaps }}
+        if: ${{ success() }}
