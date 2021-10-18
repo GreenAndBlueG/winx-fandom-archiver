@@ -35,6 +35,13 @@ jobs:
           - https://winx.fandom.com/tr/sitemap-newsitemapxml-index.xml
           - https://winx.fandom.com/uk/sitemap-newsitemapxml-index.xml
     steps:
+      - name: Cleanup pre-installed tools
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
