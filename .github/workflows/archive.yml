@@ -43,11 +43,7 @@ jobs:
       
       - name: Install Wayback Machine Archiver
         run: |
-          # tries to install with pip, if it fails clone the repository
-          pip install wayback-machine-archiver || \
-          git clone https://github.com/agude/wayback-machine-archiver.git &&
-          cd wayback-machine-archiver &&
-          ./setup.py install
+          pip install wayback-machine-archiver
 
       - name: Archive robots.txt and sitemap
         run: archiver https://winx.fandom.com/robots.txt ${{ matrix.sitemaps }}
@@ -56,6 +52,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 'lts/*'
+        if: ${{ always() }}
       
       - name: Install Wayback Sitemap Archive
         run: npm install -g wayback-sitemap-archive
