@@ -1,0 +1,64 @@
+name: Archive
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  contents:
+    name: Archive contents (${{ matrix.sitemaps }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sitemaps:
+          - https://winx.fandom.com/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/bg/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/ca/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/cs/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/es/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/fi/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/fr/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/gl/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/hr/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/hu/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/it/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/nl/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/oc/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/pl/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/pt-br/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/pt/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/ro/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/sl/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/sr/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/sv/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/tr/sitemap-newsitemapxml-index.xml
+          - https://winx.fandom.com/uk/sitemap-newsitemapxml-index.xml
+    steps:
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+          architecture: 'x64'
+      
+      - name: Install Wayback Machine Archiver
+        run: |
+          # tries to install with pip, if it fails clone the repository
+          pip install wayback-machine-archiver || \
+          git clone https://github.com/agude/wayback-machine-archiver.git &&
+          cd wayback-machine-archiver &&
+          ./setup.py install
+
+      - name: Archive robots.txt and sitemap
+        run: archiver https://winx.fandom.com/robots.txt ${{ matrix.sitemaps }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+      
+      - name: Install Wayback Sitemap Archive
+        run: npm install -g wayback-sitemap-archive
+
+      - name: Archive wiki contents
+        run: wayback-sitemap-archive ${{ matrix.sitemaps }}
