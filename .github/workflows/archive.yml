@@ -12,7 +12,11 @@ jobs:
     strategy:
       matrix:
         sitemaps:
-          - https://winx.fandom.com/sitemap-newsitemapxml-index.xml
+        #fandom automaticaly generates a sitemap of 3 sitemaps, but since the english one is too big and makes the workflow to timeout, the single ones are written separately to spin up different workflows
+          - https://winx.fandom.com/sitemap-newsitemapxml-NS_0-id-1870-111148.xml
+          - https://winx.fandom.com/sitemap-newsitemapxml-NS_14-id-1851-111149.xml
+          - https://services.fandom.com/discussions-sitemap/sitemap/6708
+          #end english
           - https://winx.fandom.com/bg/sitemap-newsitemapxml-index.xml
           - https://winx.fandom.com/ca/sitemap-newsitemapxml-index.xml
           - https://winx.fandom.com/cs/sitemap-newsitemapxml-index.xml
@@ -52,9 +56,8 @@ jobs:
         run: |
           pip install wayback-machine-archiver
 
-      - name: Archive robots.txt and sitemap
+      - name: Archive the sitemap itself
         run: |
-          archiver https://winx.fandom.com/robots.txt --log INFO
           archiver ${{ matrix.sitemaps }} --log INFO
 
       - name: Setup Node
@@ -70,3 +73,21 @@ jobs:
       - name: Archive wiki contents
         run: wayback-sitemap-archive ${{ matrix.sitemaps }}
         if: ${{ success() }}
+        
+  robots:
+    name: Archive robots.txt
+    runs-on: ubuntu-latest
+    steps:
+        - name: Setup Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.8'
+            architecture: 'x64'
+        
+        - name: Install Wayback Machine Archiver
+          run: |
+            pip install wayback-machine-archiver
+        
+        - name: Archive robots.txt
+          run: |
+            archiver https://winx.fandom.com/robots.txt --log INFO
