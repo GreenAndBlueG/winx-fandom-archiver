@@ -10,7 +10,13 @@ const message = {
 	end: readFileSync('./messages/end.txt', 'utf-8')
 };
 
+//single-url sitemaps for testing
 const sitemaps = [
+	"https://pastebin.com/raw/4rgzVQDX",
+	"https://pastebin.com/raw/7saQEW3e"
+]
+
+const sitemapsDisabled = [
 	"https://winx.fandom.com/sitemap-newsitemapxml-index.xml",
 	"https://winx.fandom.com/bg/sitemap-newsitemapxml-index.xml",
 	"https://winx.fandom.com/ca/sitemap-newsitemapxml-index.xml",
@@ -38,8 +44,8 @@ const sitemaps = [
 console.info(message.start);
 
 //for each sitemap archive its contents
-for (const sitemap of sitemaps){
+for (let sitemap of sitemaps){
 	process.env.SITEMAP_URL = sitemap;
 
-	var archiver = require('./archiver');
+	require('./archiver');
 }
