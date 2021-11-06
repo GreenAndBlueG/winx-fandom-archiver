@@ -12,12 +12,12 @@ const message = {
 };
 
 //single-url sitemaps for testing
-const sitemaps = [
+const sitemapsDisabled = [
 	"https://pastebin.com/raw/LrJgyF8s",
 	"https://pastebin.com/raw/b6kwGBSP"
 ]
 
-const sitemapsDisabled = [
+const sitemaps = [
 	"https://winx.fandom.com/sitemap-newsitemapxml-index.xml",
 	"https://winx.fandom.com/bg/sitemap-newsitemapxml-index.xml",
 	"https://winx.fandom.com/ca/sitemap-newsitemapxml-index.xml",
