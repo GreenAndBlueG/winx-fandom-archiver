@@ -2,6 +2,7 @@ console.info('Starting, please wait...');
 
 //import fs for file reading
 const { readFileSync } = require('fs');
+const fetch = require('sync-fetch');
 
 //read start and end messages from file
 const message = {
@@ -12,8 +13,8 @@ const message = {
 
 //single-url sitemaps for testing
 const sitemaps = [
-	"https://pastebin.com/raw/4rgzVQDX",
-	"https://pastebin.com/raw/7saQEW3e"
+	"https://pastebin.com/raw/LrJgyF8s",
+	"https://pastebin.com/raw/b6kwGBSP"
 ]
 
 const sitemapsDisabled = [
@@ -43,9 +44,27 @@ const sitemapsDisabled = [
 
 console.info(message.start);
 
-//for each sitemap archive its contents
+//for each sitemap...
 for (let sitemap of sitemaps){
-	process.env.SITEMAP_URL = sitemap;
+	//import sitemapper (sitemap parser) and waybackarchiver
+	const SitemapperModule = require('sitemapper');
+	const sitemapper = new SitemapperModule();
+	
+	//configure sitemapper
+	sitemapper
+	 .fetch(sitemap)
+	 .then(function(sitesRaw){ 
+		const sites = sitesRaw.sites;
+	
+		console.info('Archiving', sites.length, 'sites from', sitemap);
+	
+		//...archive every site
+		for (let url of sites){
+			fetch('https://web.archive.org/save/'+url)
+			console.info('✔️  Archived', url)
+		}
 
-	require('./archiver');
+		console.info(message.separator)
+	})
+
 }

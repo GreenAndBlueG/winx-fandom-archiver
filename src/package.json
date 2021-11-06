@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "dev": "nodemon main.js",
-		"start": "node main.js"
+    "start": "node --no-deprecation main.js"
   },
   "keywords": [],
   "author": "Green and Blue G",
@@ -14,7 +14,7 @@
     "nodemon": "^2.0.14"
   },
   "dependencies": {
-    "node-fetch": "^2.6.6",
-    "sitemapper": "^3.0.5"
+    "sitemapper": "^3.1.15",
+    "sync-fetch": "^0.3.1"
   }
 }
